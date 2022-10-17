@@ -1,0 +1,7 @@
+davis-customheader:
+  admin:
+    settings:
+      title: Custom Header Configuration
+      customheader: Custom Header HTML
+      jsofheader: Custom Header Javascript
+      cssofheader: Custom Header CSS

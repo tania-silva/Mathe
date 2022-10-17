@@ -1,0 +1,324 @@
+// Variables
+
+@categories-color-white: #fff;
+@categories-color-white-slightly-muted: darken(@categories-color-white, 5%);
+@categories-color-white-muted: darken(@categories-color-white, 11%);
+@categories-color-white-more-muted: darken(@categories-color-white, 25%);
+
+@categories-color-highlighted: @categories-color-white;
+@categories-color-muted: @categories-color-white-muted;
+
+@categories-sub-color-highlighted: lighten(#000, 5%);
+@categories-sub-color-muted: lighten(@categories-sub-color-highlighted, 30%);
+@categories-sub-color-more-muted: lighten(@categories-sub-color-highlighted, 75%);
+
+// Systems
+.TagCategory {
+  list-style: none;
+  color: @categories-color-white;
+
+  .TagCategory-content {
+    padding: 15px 20px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    background-color: @primary-color;
+    text-decoration: none !important;
+    color: @categories-color-highlighted;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.18),
+      0 3px 10px 0 rgba(0, 0, 0, 0.15);
+
+    .TagCategory-alignStart,
+    .TagCategory-alignEnd {
+      display: flex;
+      align-items: center;
+    }
+
+    .TagCategory-icon,
+    .TagCategory-main,
+    .TagCategory-stats,
+    .TagCategory-lastDiscussion {
+      display: flex;
+    }
+
+    .TagCategory-icon,
+    .TagCategory-stats,
+    .TagCategory-lastDiscussion {
+      align-items: center;
+    }
+
+    .TagCategory-main {
+      flex-direction: column;
+      text-align: left;
+      justify-content: center;
+
+      .TagCategory-name {
+        display: block;
+        margin: 0;
+        font-size: 20px;
+      }
+
+      .TagCategory-description {
+        margin-top: 0.5em;
+        color: @categories-color-muted;
+      }
+    }
+
+    &:hover {
+      opacity: 90%;
+    }
+  }
+}
+
+.TagCategoryList {
+  padding-left: 0;
+  margin-top: 0;
+
+  > .TagCategory {
+    margin-bottom: 25px;
+  }
+}
+
+.TagCategory-subTagList {
+  display: flex;
+  flex-direction: column;
+}
+
+.TagCategory.SubCategory {
+  .TagCategory-content {
+    color: @categories-sub-color-highlighted;
+    padding: 10px 20px;
+    margin: 5px 0;
+    background-color: @categories-color-white-slightly-muted;
+    box-shadow: 0 2px 4px 0em rgba(0, 0, 0, 0.04),
+      0 3px 10px 0 rgba(0, 0, 0, 0.07);
+
+    .TagCategory-main .TagCategory-description {
+      color: @categories-sub-color-muted;
+    }
+
+    .TagCategory-name {
+      font-size: 18px;
+    }
+
+    .TagCategory-icon {
+      .CategoryIcon {
+        color: @categories-color-highlighted;
+      }
+    }
+
+    &:hover {
+      background-color: @categories-color-white-muted;
+    }
+  }
+
+  &:first-child {
+    margin-top: 10px;
+  }
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.StatWidgetList {
+  display: flex;
+
+  > .StatWidget {
+    border-right: 2px solid @categories-color-white-more-muted;
+    display: flex;
+    padding: 0 10px;
+    align-items: center;
+
+    > div {
+      display: flex;
+    }
+
+    &:last-child {
+      border-right: none !important;
+    }
+
+    .StatWidget-label {
+      color: @categories-color-white-muted;
+    }
+  }
+}
+
+.TagCategory.SubCategory {
+  .StatWidget {
+    border-right: 2px solid @categories-sub-color-more-muted;
+    display: flex;
+  }
+  .StatWidget-label {
+    color: @categories-sub-color-muted;
+  }
+}
+
+.LastDiscussion {
+  display: flex;
+  align-items: center;
+  color: @categories-color-highlighted;
+
+  .LastDiscussion-userCardContainer {
+    display: block;
+    position: relative;
+  }
+
+  .UserCard {
+    position: absolute;
+    top: -20px;
+    left: -200px;
+    z-index: 1030;
+    -webkit-transition: opacity 0.2s, transform 0.2s;
+    -o-transition: opacity 0.2s, transform 0.2s;
+    transition: opacity 0.2s, transform 0.2s;
+    transform: scale(0.95);
+    transform-origin: left top;
+    opacity: 1;
+  }
+
+  &:hover {
+    text-decoration: none;
+
+    .LastDiscussion-topRow {
+      text-decoration: underline;
+    }
+    .LastDiscussion-bottomRow:hover ~ .LastDiscussion-topRow {
+      text-decoration: none !important;
+    }
+
+    .LastDiscussion-avatar:hover
+      ~ .LastDiscussion-content
+      .LastDiscussion-topRow {
+      text-decoration: none !important;
+    }
+  }
+
+  .LastDiscussion-content,
+  .LastDiscussion-topRow,
+  .LastDiscussion-bottomRow {
+    display: flex;
+  }
+
+  .LastDiscussion-bottomRow {
+    color: @categories-color-white-muted;
+
+    .LastDiscussion-usernameLink,
+    .username,
+    time {
+      display: contents;
+    }
+
+    .LastDiscussion-usernameLink {
+      color: @categories-color-white-muted;
+    }
+  }
+}
+
+.TagCategory.SubCategory {
+  .LastDiscussion {
+    color: @categories-sub-color-highlighted;
+    .LastDiscussion-bottomRow {
+      color: @categories-sub-color-muted;
+    }
+  }
+}
+
+@media @phone {
+  .TagCategory-content {
+    flex-direction: column;
+  }
+
+  .TagCategory-alignEnd {
+    flex-direction: column;
+    margin-top: 25px;
+  }
+
+  .StatWidget {
+    flex-direction: row;
+    .StatWidget-count {
+      margin-right: 4px;
+    }
+  }
+
+  .TagCategory-lastDiscussion {
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
+    margin-top: 10px;
+    padding: 7px 0;
+  }
+
+  .LastDiscussion-avatar {
+    display: none;
+  }
+
+  .LastDiscussion-content {
+    flex-direction: row-reverse;
+  }
+
+  .LastDiscussion-topRow {
+    margin-right: 5px;
+  }
+
+  .TagCategory-icon,
+  .TagCategory-main,
+  .TagCategory-stats {
+    padding: 0 15px 0 0px;
+  }
+
+  .LastDiscussion .UserCard {
+    display: none;
+  }
+}
+
+@media @tablet-up {
+  .TagCategory-content {
+    flex-direction: row;
+  }
+
+  .TagCategory-alignEnd {
+    flex-direction: row;
+  }
+  .TagCategory-alignStart {
+    max-width: 50%;
+    margin-bottom: 0;
+  }
+
+  .StatWidget {
+    flex-direction: column;
+    .StatWidget-count {
+      margin-right: 0;
+    }
+  }
+
+  .TagCategory-lastDiscussion {
+    border-top: none;
+    margin-top: 0;
+    padding: 0 15px;
+  }
+
+  .LastDiscussion-avatar {
+    display: block;
+    padding-right: 10px;
+  }
+
+  .LastDiscussion-content {
+    flex-direction: column-reverse;
+  }
+
+  .TagCategory-icon,
+  .TagCategory-main,
+  .TagCategory-stats {
+    padding: 0 15px;
+  }
+
+  .TagCategory-lastDiscussion.empty {
+    justify-content: center;
+  }
+
+  .TagCategory-lastDiscussion {
+    width: 280px;
+  }
+
+  .TagCategory.SubCategory .TagCategory-lastDiscussion {
+    width: 250px;
+  }
+}

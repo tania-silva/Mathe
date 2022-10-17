@@ -1,0 +1,73 @@
+<html>
+<head>
+<title>Live Preview of MathJax Type Setting</title>
+<script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_HTMLorMML">
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ["\\(","\\)"]] } });
+</script>
+<meta http-equiv="X-UA-Compatible" CONTENT="IE=EmulateIE7" />
+</head>
+<body>
+
+<script type="text/javascript">
+function doPreview(mode) {
+  var textAreaId = 'text';
+  var previewAreaId = 'preview';
+  
+  if (!getElementPreview(textAreaId) || !getElementPreview(previewAreaId)) {
+    return;
+  } else if (mode == 'init') {
+    getElementPreview(previewAreaId).innerHTML = 'Preview Area';
+    return;
+  }
+  
+  var s = getStringPreview(textAreaId);
+  
+  if (getElementPreview(previewAreaId)) {
+    getElementPreview(previewAreaId).innerHTML = s;
+  }
+  MathJax.Hub.Queue(["Typeset",MathJax.Hub],previewAreaId);
+}
+
+function getStringPreview(e) {
+  var s = '';
+  s = getElementPreview(e).value;
+  s = s.split('&').join('&amp;');
+  s = s.split('<').join('&lt;');
+  s = s.split('>').join('&gt;');
+  s = s.split('\'').join('&#92;');
+  return s;
+}
+
+function getElementPreview(e, f) {
+  var l = (document.layers) ? 1 : 0;
+  if(l) {
+    f=(f) ? f : self;
+    var a = f.document.layers;
+    if (a[e]) return a[e];
+      for (var w = 0; w < a.length;) {
+      return getElementPreview(e, a[w++]);
+    }
+  }
+  if (document.all) return document.all[e];
+  return document.getElementById(e);
+}
+
+doPreview('init');
+</script>
+
+<h1>Live Preview of MathJax Type Setting</h1>
+
+<h2>Input</h2>
+
+<p>Examples: <code>$\varphi_i</code>, <code>\(\frac12\)</code>, <code>\sum_{n=1}^\infty x^n</code>, etc</p>
+
+<p><textarea id="text" name="body" cols="80" rows="8" onkeyup="doPreview()" onblur="doPreview()"></textarea></p>
+
+<h2>Preview</h2>
+
+<div id="preview">Preview Area</div>
+
+</body>

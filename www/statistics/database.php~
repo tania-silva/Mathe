@@ -1,0 +1,106 @@
+<?php
+define("DBSERVERNAME", "localhost:3306");
+define("DBNAME", "mathe_offline");
+define("DBUSERNAME", "root");
+define("DBPASSWORD", "root");
+
+define("QUERYPREFIX", __DIR__ . "/queries/");
+
+define("JSON_PRINT_MODE", 0);
+define("ARRAY_PRINT_MODE", 1);
+define("DO_NOT_PROCESS", 2);
+
+function initialize() {
+    // Install split_str function
+    mathe_data("sql_split", $key = "", $mode = DO_NOT_PROCESS);
+}
+
+function jsonify($result, $key) {
+    print "{\n";
+
+    $row_count = $result->num_rows -1;
+    while($row = $result->fetch_assoc()) {
+
+        print "\"{$row[$key]}\" : {";
+        
+        $field_count = count($row) -1;
+        foreach( $row as $column_name => $value) {
+            // $value = str_replace(array("\r","\n"), "\\n", $value);
+            print "\"{$column_name}\" : `{$value}`" . ($field_count-- ? ',' : '');
+        }
+
+        print '}' . ($row_count-- ? ',' : '') . "\n";
+    }
+    
+    print '}';
+}
+
+function arrayfy($result) {
+    print "[\n";
+
+    $row_count = $result->num_rows -1;
+    while($row = $result->fetch_assoc()) {
+
+        print "{";
+
+        $field_count = count($row) -1;
+        foreach( $row as $column_name => $value) {
+            // $value = str_replace(array("\r","\n"), "\\n", $value);
+            print "\"{$column_name}\" : `{$value}`" . ($field_count-- ? ',' : '');
+        }
+
+        print '}' . ($row_count-- ? ',' : '') . "\n";
+    }
+    
+    print ']';
+}
+
+
+function mathe_with_connection($callback){
+    // Create connection
+    $conn = new mysqli(DBSERVERNAME, DBUSERNAME, DBPASSWORD, DBNAME);
+    $conn->set_charset('utf8');
+    
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    $callback($conn);
+
+    $conn->close();
+}
+
+function mathe_data($query, $key = "id", $mode = JSON_PRINT_MODE){
+    // Static variable used to keep track of when to install sql functions
+    static $initialized = false;
+
+    if (!$initialized) {
+        $initialized = true;
+        initialize();
+       }
+
+    $run_query = function ($conn) use ($query ,$key, $mode){        
+        if ($result = $conn->query( file_get_contents(QUERYPREFIX . $query . ".sql")) ){
+            switch ($mode) {
+            case JSON_PRINT_MODE:
+            jsonify($result, $key);
+            break;
+
+            case ARRAY_PRINT_MODE:
+            arrayfy($result);
+            break;
+
+            default:
+            case DO_NOT_PROCESS:
+            // dont print anything
+            }
+
+        } else {
+            echo "Query fail";
+        }
+    };
+
+    mathe_with_connection($run_query);
+}
+?>
