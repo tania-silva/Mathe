@@ -83,7 +83,7 @@ if ($rqst==1) {
 }elseif($rqst==4){
 	if ($totaleSubtopic>0) {
 		?>
-		<select name="SubTopic" style="width: 250px;" onchange="keywords2(this.options[this.selectedIndex].value, '<?=$idTop?>');">
+		<select name="subtopic" style="width: 250px;" onchange="keywords2(this.options[this.selectedIndex].value, '<?=$idTop?>');">
 			<option value="">All SubTopics</option>
 			<?php
 			while ($row=mysqli_fetch_array($result)) { 
