@@ -87,7 +87,7 @@ if ($_GET["act"]=="reg" AND $qstId) {
 		$result=mysqli_query($conn,$sql);
 
 		if ($delAttach) {
-			// Cancello il file allegato
+			// Delete the attached file
 			$sql = "
 				SELECT *
 				FROM platform__SNA__questions 
@@ -117,7 +117,7 @@ if ($_GET["act"]=="reg" AND $qstId) {
 		$check= new CheckUpload($_FILES["filex"]);
 		if ($check->isOk()) {
 
-			// Cancello il vecchio file allegato
+			// Delete the old attached file
 			$sql = "
 				SELECT *
 				FROM platform__SNA__questions 

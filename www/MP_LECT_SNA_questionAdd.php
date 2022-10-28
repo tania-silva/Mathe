@@ -60,12 +60,10 @@ if ($_GET["act"]=="reg" AND $usrId) {
 		$keywords
 	) $checkStatus=1;
 
+	
 	if ($checkStatus) {
 
 		/* Registro il nuovo esercizio */
-
-		//IPB: Con
-
 		$date=Date("Y-m-d H:i:s");
 		$validate=0;
 
@@ -75,6 +73,13 @@ if ($_GET["act"]=="reg" AND $usrId) {
 			VALUES ('$usrId', '$description', '$topic', '$subTopic', '$question', '$level', '$answer1', '$answer2', '$answer3', '$answer4', '$date', '$validateValue')";
 		$result=mysqli_query($conn,$sql);
 		$qstId=mysqli_insert_id($conn);
+
+		//IPB: INSERT into platform_keywords_snaquestions table
+		foreach($keywords as $key){
+			$sql="
+			INSERT INTO `platform_keyword_snaquestion`(`id_keyword`, `id_sna_question`) VALUES ('$key','$qstId')";
+			$resultKeyword=mysqli_query($conn,$sql);
+		}
 
 		// Upload document
 		$check= new CheckUpload($_FILES["filex"]);
@@ -179,25 +184,6 @@ if ($_GET["act"]=="reg" AND $usrId) {
 		  return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
 		}
 
-		//IPB: Subtopic to Keyword	
-		// function subTopicToKeyword(obj) {
-		// 	document.getElementById('subtopic').style.display='none';
-			
-		// 	if (obj) {
-		// 		document.getElementById('subtopic').style.display='block';
-
-		// 		var dominio=document.domain;
-		// 		var idblockname = "subtopic";
-		// 		var url = "./impianto/jquery/Rqst05.php?rqst=1&idTop="+obj;
-
-		// 		var xhr = makeXMLHttpRequest();
-		// 		xhr.open("GET", url, true);
-		// 		xhr.onreadystatechange = function() {processResponse(xhr, 'html', idblockname);}
-		// 		xhr.send(null); 
-		// 	}
-		// }
-
-		//doPreview('init');
 	</script>
 
 
@@ -249,7 +235,16 @@ if ($_GET["act"]=="reg" AND $usrId) {
 								<div class="clear"></div>
 							</div>
 						</div>
-						<!--KeyWords div-->
+
+						<div class="signup_field_ext">
+							<label style="font-weight: 400;color: #c00;">* Question [<a href="javascript: void()" onclick="doPreview('','question','questionPreview')">Preview</a>]</label>
+							<textarea name="question" id="question" style="height: 150px;" required /></textarea>
+							<div id="questionPreviewBlk" style="display: none;width: 636px;margin-top: 5px;border: solid 1px #900;border-radius: 5px;">
+								<p style="padding: 5px;font-weight: 400;color: #fff;background-color: #900;">Preview of the Question</p>
+								<p id="questionPreview" style="padding: 10px;">&nbsp;</p>
+							</div>
+						</div>
+							<!--KeyWords div-->
 						<div class="signup_field_ext">
 							<label style="font-weight: 400;color: #c00;">* Keywords</label>
 							<div style="width: 625px;height: 400px;padding: 10px 0 10px 10px;border: dotted 1px #00aeef;border-radius: 5px;overflow: auto;">
@@ -259,16 +254,6 @@ if ($_GET["act"]=="reg" AND $usrId) {
 								<div class="clear"></div>
 							</div>
 						</div>
-						
-						<div class="signup_field_ext">
-							<label style="font-weight: 400;color: #c00;">* Question [<a href="javascript: void()" onclick="doPreview('','question','questionPreview')">Preview</a>]</label>
-							<textarea name="question" id="question" style="height: 150px;" required /></textarea>
-							<div id="questionPreviewBlk" style="display: none;width: 636px;margin-top: 5px;border: solid 1px #900;border-radius: 5px;">
-								<p style="padding: 5px;font-weight: 400;color: #fff;background-color: #900;">Preview of the Question</p>
-								<p id="questionPreview" style="padding: 10px;">&nbsp;</p>
-							</div>
-						</div>
-						
 						<div class="signup_field_ext">
 							<label style="font-weight: 400;color: #c00;">* Level</label>
 							<p><input type="radio" name="level" class="radiobutt" value="Basic" style="width: 30px;" checked /><label class="radiobutt">Basic</label></p>
