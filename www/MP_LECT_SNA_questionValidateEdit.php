@@ -53,7 +53,7 @@ if ($_GET["act"]=="reg" AND $qstId) {
 	$answer3=Pulisci_INS($_POST["answer3"]);
 	$answer4=Pulisci_INS($_POST["answer4"]);
 	$delAttach=Pulisci_INS($_POST["delAttach"]);
-
+	$KeywordsNew=$_POST["keywords"];
 
 	$checkStatus=0;
 	if (
@@ -65,6 +65,7 @@ if ($_GET["act"]=="reg" AND $qstId) {
 		$answer1 AND 
 		$answer2 AND 
 		$answer3 AND 
+		$KeywordsNew AND
 		$answer4
 	) $checkStatus=1;
 
@@ -85,6 +86,20 @@ if ($_GET["act"]=="reg" AND $qstId) {
 				answer4='$answer4'
 			WHERE id=$qstId";
 		$result=mysqli_query($conn,$sql);
+
+		//IPB: UPDATE platform_keywords_snaQuestion
+
+		$sqlDelete = " 
+		DELETE FROM `platform_keyword_snaquestion` WHERE `id_sna_question` = '$qstId'";
+		$resultDelete=mysqli_query($conn,$sqlDelete);
+
+		$sqlInsert= "
+		INSERT INTO `platform_keyword_snaquestion`(`id_keyword`, `id_sna_question`) VALUES";
+		foreach($KeywordsNew as $key){
+			$sqlInsert .= "('$key','$qstId'),";
+		}
+		$sqlInsert= rtrim($sqlInsert, ",");
+		$resulInsert=mysqli_query($conn,$sqlInsert);
 
 		if ($delAttach) {
 			// Delete the attached file
@@ -194,6 +209,18 @@ if ($_GET["act"]=="reg" AND $qstId) {
 		$date=$row["date"];
 	}
 
+	//IPB: Get associeted Keywords
+	$sql = "
+	SELECT id_keyword FROM `platform_keyword_snaquestion` WHERE id_sna_question = '$qstId'";
+
+	$resultKeyword=mysqli_query($conn,$sql);
+	$keywords = [];
+	while ($row=mysqli_fetch_array($resultKeyword)) { 		
+		array_push($keywords, $row["id_keyword"]);
+	}
+	
+
+
 	// File allegato alla question
 	//$pict="./data/news/".$pict_id.".jpg";
 	$pict="./data/mathePlatform/SNA/attach/".$qstId.".".$fileExt;
@@ -275,6 +302,14 @@ if ($_GET["act"]=="reg" AND $qstId) {
 		  return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
 		}
 
+		//IPB: Get Keywords
+		function getKeywords (idSubTopic){
+			var e = document.getElementById("topic");
+			var idTopic
+			typeof e.value == 'undefined' ? idTopic = <?php echo $topic?> : idTopic = e.options[e.selectedIndex].value;
+			keywords2(idSubTopic, idTopic);
+		}
+
 	</script>
 
 					<p class="rsvPage_Title">Edit Question</p>
@@ -288,7 +323,6 @@ if ($_GET["act"]=="reg" AND $qstId) {
 
 
 					<form method="post" action="./MP_LECT_SNA_questionValidateEdit.php?act=reg&id_act=<?=$qstId?>&<?=$queryStr?>" enctype="multipart/form-data" style="display: block;margin-top: 5px;padding: 20px 0 20px 50px;border: solid 1px #00aeef;border-radius: 10px;">
-
 						<!-- <div class="signup_field_ext">
 							<label style="font-weight: 400;color: #c00;">* Description</label>
 							<textarea name="description" required /><?=$description?></textarea>
@@ -298,7 +332,7 @@ if ($_GET["act"]=="reg" AND $qstId) {
 							<label style="font-weight: 400;color: #c00;">* Topic</label>
 							<div style="width: 625px;padding: 10px 0 10px 10px;border: dotted 1px #00aeef;border-radius: 5px;">
 								<div id="topic" style="float: left;margin: 1px 0 0 0;">
-									<select name="topic" style="float: left;width: 250px;" onchange="subTopic(this.options[this.selectedIndex].value);">
+									<select  name="topic" style="float: left;width: 250px;" onchange="keywordsQuestions(this.options[this.selectedIndex].value);">
 										<option value=""> Select Topic</option>
 										<?php 
 										$sql = "
@@ -319,7 +353,7 @@ if ($_GET["act"]=="reg" AND $qstId) {
 								<?php if ($subtopic) $displaySubTopic="block"; else $displaySubTopic="none"; ?>
 								<div id="subtopic" style="display: <?=$displaySubTopic?>;float: left;margin: 0 0 0 20px;">
 									<!-- SubTopic Area -->
-									<select name="subtopic" style="float: left;width: 250px;">
+									<select name="subtopic" style="float: left;width: 250px;" onchange="getKeywords(this.options[this.selectedIndex].value)">
 										<option value=""> Select Subtopic</option>
 										<?php 
 										$sql = "
@@ -390,6 +424,32 @@ if ($_GET["act"]=="reg" AND $qstId) {
 							<div id="answer4PreviewBlk" style="display: none;width: 636px;margin-top: 5px;border: solid 1px #900;border-radius: 5px;">
 								<p style="padding: 5px;font-weight: 400;color: #fff;background-color: #900;">Preview of Answer n. 4</p>
 								<p id="answer4Preview" style="padding: 10px;">&nbsp;</p>
+							</div>
+						</div>
+						<!-- IPB Keywords -->
+						<div class="signup_field_ext">
+							<label style="font-weight: 400;color: #c00;">* Keywords</label>
+							<div style="width: 625px;height: 400px;padding: 10px 0 10px 10px;border: dotted 1px #00aeef;border-radius: 5px;overflow: auto;">
+								<div id="keywords">
+									<?php $sql = "
+										SELECT *  
+										FROM platform__keywords 
+										WHERE (id_top=$topic AND id_sub=$subtopic) 
+										ORDER BY name ASC";
+									$result1=mysqli_query($conn,$sql);
+
+									while ($row1=mysqli_fetch_array($result1)) { 
+										$keyId=($row1["id"]);
+										$keyName=($row1["name"]);
+										?><div style="display: inline-block; position: relative; padding-left: 35px; margin-bottom: 10px;">
+										<input type="checkbox" <?php foreach($keywords as $key){if ($key==$keyId) echo 'checked="checked"';}?> name="keywords[]" value="<?=$keyId?>" />
+										 <label style="font-size: 1.0em;font-weight: 300;"><?=$keyName?></label>
+										 </div>
+										 <?php
+									}
+									?>
+						</div>
+								<div class="clear"></div>
 							</div>
 						</div>
 

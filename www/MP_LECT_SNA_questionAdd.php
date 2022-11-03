@@ -56,8 +56,8 @@ if ($_GET["act"]=="reg" AND $usrId) {
 		$answer1 AND 
 		$answer2 AND 
 		$answer3 AND 
-		$answer4 AND
-		$keywords
+		$keywords AND
+		$answer4
 	) $checkStatus=1;
 
 	
@@ -109,7 +109,7 @@ if ($_GET["act"]=="reg" AND $usrId) {
 	} else $redirectUrl="./MP_LECT_SNA_questionAdd.php?msg=KO";
 
 	echo "<SCRIPT LANGUAGE=JAVASCRIPT>";
-	// echo "document.location.href='".$redirectUrl."';";
+	echo "document.location.href='".$redirectUrl."';";
 	echo "</SCRIPT>";
 }
 ?>
@@ -244,16 +244,7 @@ if ($_GET["act"]=="reg" AND $usrId) {
 								<p id="questionPreview" style="padding: 10px;">&nbsp;</p>
 							</div>
 						</div>
-							<!--KeyWords div-->
-						<div class="signup_field_ext">
-							<label style="font-weight: 400;color: #c00;">* Keywords</label>
-							<div style="width: 625px;height: 400px;padding: 10px 0 10px 10px;border: dotted 1px #00aeef;border-radius: 5px;overflow: auto;">
-								<div id="keywords" style=" display: inline-block; padding-right: 10px; white-space: nowrap;margin: 1px 0 0 0;">
-									<!-- Keyword Area -->
-								</div>
-								<div class="clear"></div>
-							</div>
-						</div>
+					
 						<div class="signup_field_ext">
 							<label style="font-weight: 400;color: #c00;">* Level</label>
 							<p><input type="radio" name="level" class="radiobutt" value="Basic" style="width: 30px;" checked /><label class="radiobutt">Basic</label></p>
@@ -300,6 +291,17 @@ if ($_GET["act"]=="reg" AND $usrId) {
 						<div class="signup_field_ext">
 							<label style="font-weight: 400;color: #c00;">&nbsp;&nbsp;&nbsp;&nbsp;Attachment</label>
 							<input type="file" name="filex" />
+						</div>
+
+						<!--KeyWords div-->
+						 <div class="signup_field_ext">
+							<label style="font-weight: 400;color: #c00;">* Keywords</label>
+							<div style="width: 625px;height: 400px;padding: 10px 0 10px 10px;border: dotted 1px #00aeef;border-radius: 5px;overflow: auto;">
+								<div id="keywords" style=" display: inline-block; padding-right: 10px; white-space: nowrap;margin: 1px 0 0 0;">
+									<!-- Keyword Area -->
+								</div>
+								<div class="clear"></div>
+							</div>
 						</div>
 
 						<!-- <div class="signup_submit" style="padding-left: 70px;">
