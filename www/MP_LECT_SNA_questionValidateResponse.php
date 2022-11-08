@@ -94,6 +94,16 @@ if ($_GET["act"]=="reg" AND $qstId AND $validateValue) {
 		$validate_by=$row["validate_by"];
 	}
 	
+	//IPB: Get associeted Keywords
+	$sql = "
+	SELECT id_keyword FROM `platform_keyword_snaquestion` WHERE id_sna_question = 1283";
+
+	$resultKeyword=mysqli_query($conn,$sql);
+	$keywords = [];
+	while ($row=mysqli_fetch_array($resultKeyword)) { 		
+		array_push($keywords, $row["id_keyword"]);
+	}
+	
 	if ($validate==1) $validateTr="<span style=\"font-weight: 600;color: #090;\">VALIDATED</span>";
 	elseif ($validate==2) $validateTr="<span style=\"font-weight: 600;color: #900;\">NOT VALIDATED</span>";
 	else $validateTr="<span style=\"font-weight: 600;color: #ffcc00;\">WAITING FOR VALIDATION</span>";
@@ -233,10 +243,16 @@ if ($_GET["act"]=="reg" AND $qstId AND $validateValue) {
 							</div>
 						</div>
 
+						
+						<?php $keystring = "";
+						foreach($keywords as $key):
+							$keystring .= "&keywords[]=".$key;
+						endforeach; ?>
+
 
 						<div class="signup_submit" style="padding-left: 30px;">
 							<a href="./<?=$destPage?>.php?<?=$queryStr?>"><button type="button" class="abort" style="width: 100px;padding: 5px;" />Exit</button></a>
-							<a href="./MP_LECT_SNA_questionValidateEdit.php?id_act=<?=$qstId?>&<?=$queryStr?>"><button type="button" class="edit" style="width: 100px;margin-left: 5px;padding: 5px;" />EDIT</button></a>
+							<a href="./MP_LECT_SNA_questionValidateEdit.php?id_act=<?=$qstId?>&<?=$queryStr?>&<?=$keystring;?>"><button type="button" class="edit" style="width: 100px;margin-left: 5px;padding: 5px;" />EDIT</button></a>
 							<input type="submit" name="notValidate" value="NOT APPROVED" class="notValidate" style="width: 150px;margin-left: 100px;padding: 5px;" />
 							<input type="submit" name="validate" value="APPROVED" class="proceed" style="width: 150px;margin-left: 5px;padding: 5px;" />
 						</div>

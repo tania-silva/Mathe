@@ -497,6 +497,8 @@ function processResponse(xhr, responseType, idblockname) {
 
 	//IPB: Get Keywords
 	function keywords2(obj, idTop) {
+		console.log("Topic: " + idTop);
+		
 		document.getElementById('keywords').style.display='none';
 		
 		if (obj) {

@@ -56,6 +56,7 @@ if ($_GET["act"]=="reg" AND $qstId) {
 	$answer3=Pulisci_INS($_POST["answer3"]);
 	$answer4=Pulisci_INS($_POST["answer4"]);
 	$delAttach=Pulisci_INS($_POST["delAttach"]);
+	$KeywordsNew=$_POST["keywords"];
 
 
 	$checkStatus=0;
@@ -89,6 +90,19 @@ if ($_GET["act"]=="reg" AND $qstId) {
 				validate='$validateValue'
 			WHERE id=$qstId";
 		$result=mysqli_query($conn,$sql);
+
+		//IPB: UPDATE platform_keywords_snaQuestion
+		$sqlDelete = " 
+		DELETE FROM `platform_keyword_snaquestion` WHERE `id_sna_question` = '$qstId'";
+		$resultDelete=mysqli_query($conn,$sqlDelete);
+
+		$sqlInsert= "
+		INSERT INTO `platform_keyword_snaquestion`(`id_keyword`, `id_sna_question`) VALUES";
+		foreach($KeywordsNew as $key){
+			$sqlInsert .= "('$key','$qstId'),";
+		}
+		$sqlInsert= rtrim($sqlInsert, ",");
+		$resulInsert=mysqli_query($conn,$sqlInsert);
 
 		if ($delAttach) {
 			// Cancello il file allegato
@@ -196,12 +210,22 @@ if ($_GET["act"]=="reg" AND $qstId) {
 		$fileExt=$row["file_ext"];
 		$date=$row["date"];
 	}
+	//IPB: Get associeted Keywords
+	$sql = "
+	SELECT id_keyword FROM `platform_keyword_snaquestion` WHERE id_sna_question = '$qstId'";
 
+	$resultKeyword=mysqli_query($conn,$sql);
+	$keywords = [];
+	while ($row=mysqli_fetch_array($resultKeyword)) { 		
+		array_push($keywords, $row["id_keyword"]);
+	}
+	
 	// File allegato alla question
 	$pict="./data/mathePlatform/SNA/attach/".$qstId.".".$fileExt;
 }
 ?>
-
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 	<script type="text/x-mathjax-config">
 	  MathJax.Hub.Config({
 		tex2jax: {
@@ -213,6 +237,20 @@ if ($_GET["act"]=="reg" AND $qstId) {
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
 
 	<script type="text/javascript">
+	  //IPB: Check if at least one keyword is selected
+		$(document).ready(function () {
+			$('.proceed').click(function() {
+			checked = $("input[type=checkbox]:checked").length;
+
+			if(!checked) {
+				alert("You must select at least one keyword.");
+				return false;
+			}else{
+				console.log("Tenho keywords selecionadas;");
+			}
+			});
+		});
+
 		function doPreview(mode,source) {
 		  var textAreaId = source;
 		  var previewAreaId = source+"Preview";
@@ -286,6 +324,15 @@ if ($_GET["act"]=="reg" AND $qstId) {
 		}
 		//doPreview('init');
 
+		//IPB: Get Keywords
+		function getKeywords (idSubTopic){
+			var e = document.getElementById("topic");
+			var idTopic
+			typeof e.value == 'undefined' ? idTopic = <?php echo $topic?> : idTopic = e.options[e.selectedIndex].value;
+			keywords2(idSubTopic, idTopic);
+		}
+
+
 MathJax.Hub.Config({
   tex2jax: {
     inlineMath: [ ['$','$'], ['\\(','\\)'] ]
@@ -299,7 +346,8 @@ MathJax.Hub.Config({
 //			  displayMath: [ ['$$','$$'] ]
 //			}
 //		  });
-	</script>
+
+</script>
 
 					<p class="rsvPage_Title">Edit Question</p>
 					<p class="rsvPage_Title1">Student Need Assessment</p>
@@ -322,7 +370,7 @@ MathJax.Hub.Config({
 							<label style="font-weight: 400;color: #c00;">* Topic</label>
 							<div style="width: 625px;padding: 10px 0 10px 10px;border: dotted 1px #00aeef;border-radius: 5px;">
 								<div id="topic" style="float: left;margin: 1px 0 0 0;">
-									<select name="topic" style="float: left;width: 250px;" onchange="subTopic(this.options[this.selectedIndex].value);">
+									<select name="topic" style="float: left;width: 250px;" onchange="keywordsQuestions(this.options[this.selectedIndex].value);">
 										<option value=""> Select Topic</option>
 										<?php
 										$sql = "
@@ -343,7 +391,7 @@ MathJax.Hub.Config({
 								<?php if ($subtopic) $displaySubTopic="block"; else $displaySubTopic="none"; ?>
 								<div id="subtopic" style="display: <?=$displaySubTopic?>;float: left;margin: 0 0 0 20px;">
 									<!-- SubTopic Area -->
-									<select name="subtopic" style="float: left;width: 250px;">
+									<select name="subtopic" style="float: left;width: 250px;" onchange="getKeywords(this.options[this.selectedIndex].value)">
 										<option value=""> Select Subtopic</option>
 										<?php
 										$sql = "
@@ -416,6 +464,34 @@ MathJax.Hub.Config({
 								<p id="answer4Preview" style="padding: 10px;">&nbsp;</p>
 							</div>
 						</div>
+
+						<!-- IPB Keywords -->
+						<div style="margin: 15px 0 0 18px;">
+							<label style="font-weight: 400;color: #c00;">* Keywords</label>
+							<div style="width: 625px;height: 400px;padding: 10px 0 10px 10px;border: dotted 1px #00aeef;border-radius: 5px;overflow: auto;">
+								<div id="keywords" style="display: inline-block; padding-right: 10px; white-space: nowrap;margin: 1px 0 0 0;">
+									<?php $sql = "
+										SELECT *  
+										FROM platform__keywords 
+										WHERE (id_top=$topic AND id_sub=$subtopic) 
+										ORDER BY name ASC";
+									$result1=mysqli_query($conn,$sql);
+
+									while ($row1=mysqli_fetch_array($result1)) { 
+										$keyId=($row1["id"]);
+										$keyName=($row1["name"]);
+										?><div>
+										<input type="checkbox" <?php foreach($keywords as $key){if ($key==$keyId) echo 'checked="checked"';}?> name="keywords[]" value="<?=$keyId?>" />
+										 <label style="font-size: 1.0em;font-weight: 300;"><?=$keyName?></label>
+										 </div>
+										 <?php
+									}
+									?>
+						</div>
+								<div class="clear"></div>
+							</div>
+						</div>
+
 
 						<div class="signup_field_ext">
 							<label style="font-weight: 400;color: #c00;">&nbsp;&nbsp;&nbsp;&nbsp;Attachment</label>

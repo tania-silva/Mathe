@@ -56,16 +56,14 @@ if ($_GET["act"]=="reg" AND $usrId) {
 		$answer1 AND 
 		$answer2 AND 
 		$answer3 AND 
-		$answer4 AND
-		$keywords
+		$keywords AND
+		$answer4
 	) $checkStatus=1;
 
+	
 	if ($checkStatus) {
 
 		/* Registro il nuovo esercizio */
-
-		//IPB: Con
-
 		$date=Date("Y-m-d H:i:s");
 		$validate=0;
 
@@ -75,6 +73,13 @@ if ($_GET["act"]=="reg" AND $usrId) {
 			VALUES ('$usrId', '$description', '$topic', '$subTopic', '$question', '$level', '$answer1', '$answer2', '$answer3', '$answer4', '$date', '$validateValue')";
 		$result=mysqli_query($conn,$sql);
 		$qstId=mysqli_insert_id($conn);
+
+		//IPB: INSERT into platform_keywords_snaquestions table
+		foreach($keywords as $key){
+			$sql="
+			INSERT INTO `platform_keyword_snaquestion`(`id_keyword`, `id_sna_question`) VALUES ('$key','$qstId')";
+			$resultKeyword=mysqli_query($conn,$sql);
+		}
 
 		// Upload document
 		$check= new CheckUpload($_FILES["filex"]);
@@ -104,7 +109,7 @@ if ($_GET["act"]=="reg" AND $usrId) {
 	} else $redirectUrl="./MP_LECT_SNA_questionAdd.php?msg=KO";
 
 	echo "<SCRIPT LANGUAGE=JAVASCRIPT>";
-	// echo "document.location.href='".$redirectUrl."';";
+	echo "document.location.href='".$redirectUrl."';";
 	echo "</SCRIPT>";
 }
 ?>
@@ -116,6 +121,7 @@ if ($_GET["act"]=="reg" AND $usrId) {
 		}
 	  });
 	</script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
 	<script type="text/javascript">
 		function doPreview(mode,source) {
@@ -179,25 +185,17 @@ if ($_GET["act"]=="reg" AND $usrId) {
 		  return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
 		}
 
-		//IPB: Subtopic to Keyword	
-		// function subTopicToKeyword(obj) {
-		// 	document.getElementById('subtopic').style.display='none';
-			
-		// 	if (obj) {
-		// 		document.getElementById('subtopic').style.display='block';
+		$(document).ready(function () {
+			$('.proceed').click(function() {
+			checked = $("input[type=checkbox]:checked").length;
 
-		// 		var dominio=document.domain;
-		// 		var idblockname = "subtopic";
-		// 		var url = "./impianto/jquery/Rqst05.php?rqst=1&idTop="+obj;
+			if(!checked) {
+				alert("You must select at least one keyword.");
+				return false;
+			}
+			});
+		});
 
-		// 		var xhr = makeXMLHttpRequest();
-		// 		xhr.open("GET", url, true);
-		// 		xhr.onreadystatechange = function() {processResponse(xhr, 'html', idblockname);}
-		// 		xhr.send(null); 
-		// 	}
-		// }
-
-		//doPreview('init');
 	</script>
 
 
@@ -249,17 +247,7 @@ if ($_GET["act"]=="reg" AND $usrId) {
 								<div class="clear"></div>
 							</div>
 						</div>
-						<!--KeyWords div-->
-						<div class="signup_field_ext">
-							<label style="font-weight: 400;color: #c00;">* Keywords</label>
-							<div style="width: 625px;height: 400px;padding: 10px 0 10px 10px;border: dotted 1px #00aeef;border-radius: 5px;overflow: auto;">
-								<div id="keywords" style=" display: inline-block; padding-right: 10px; white-space: nowrap;margin: 1px 0 0 0;">
-									<!-- Keyword Area -->
-								</div>
-								<div class="clear"></div>
-							</div>
-						</div>
-						
+
 						<div class="signup_field_ext">
 							<label style="font-weight: 400;color: #c00;">* Question [<a href="javascript: void()" onclick="doPreview('','question','questionPreview')">Preview</a>]</label>
 							<textarea name="question" id="question" style="height: 150px;" required /></textarea>
@@ -268,7 +256,7 @@ if ($_GET["act"]=="reg" AND $usrId) {
 								<p id="questionPreview" style="padding: 10px;">&nbsp;</p>
 							</div>
 						</div>
-						
+					
 						<div class="signup_field_ext">
 							<label style="font-weight: 400;color: #c00;">* Level</label>
 							<p><input type="radio" name="level" class="radiobutt" value="Basic" style="width: 30px;" checked /><label class="radiobutt">Basic</label></p>
@@ -315,6 +303,17 @@ if ($_GET["act"]=="reg" AND $usrId) {
 						<div class="signup_field_ext">
 							<label style="font-weight: 400;color: #c00;">&nbsp;&nbsp;&nbsp;&nbsp;Attachment</label>
 							<input type="file" name="filex" />
+						</div>
+
+						<!--KeyWords div-->
+						 <div style="margin: 15px 0 0 18px;">
+							<label style="font-weight: 400;color: #c00;">* Keywords</label>
+							<div style="width: 625px;height: 400px;padding: 10px 0 10px 10px;border: dotted 1px #00aeef;border-radius: 5px;overflow: auto;">
+								<div id="keywords" style="display: inline-block; padding-right: 10px; white-space: nowrap;margin: 1px 0 0 0;">
+									<!-- Keyword Area -->
+								</div>
+								<div class="clear"></div>
+							</div>
 						</div>
 
 						<!-- <div class="signup_submit" style="padding-left: 70px;">
