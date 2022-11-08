@@ -226,6 +226,7 @@ if ($_GET["act"]=="reg" AND $qstId) {
 	$pict="./data/mathePlatform/SNA/attach/".$qstId.".".$fileExt;
 }
 ?>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 	<script type="text/x-mathjax-config">
 	  MathJax.Hub.Config({
 		tex2jax: {
@@ -237,6 +238,18 @@ if ($_GET["act"]=="reg" AND $qstId) {
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
 
 	<script type="text/javascript">
+		//IPB: check if at least one keyword is selected
+		$(document).ready(function () {
+			$('.proceed').click(function() {
+			checked = $("input[type=checkbox]:checked").length;
+
+			if(!checked) {
+				alert("You must select at least one keyword.");
+				return false;
+			}
+			});
+		});
+
 		function doPreview(mode,source) {
 		  var textAreaId = source;
 		  var previewAreaId = source+"Preview";
@@ -427,10 +440,10 @@ if ($_GET["act"]=="reg" AND $qstId) {
 							</div>
 						</div>
 						<!-- IPB Keywords -->
-						<div class="signup_field_ext">
+						<div style="margin: 15px 0 0 18px;">
 							<label style="font-weight: 400;color: #c00;">* Keywords</label>
-							<div style="width: 625px;height: 400px;padding: 10px 0 10px 10px;border: dotted 1px #00aeef;border-radius: 5px;overflow: auto;">
-								<div id="keywords">
+							<div  style="width: 625px;height: 400px;padding: 10px 0 10px 10px;border: dotted 1px #00aeef;border-radius: 5px;overflow: auto;">
+								<div id="keywords" style="display: inline-block; padding-right: 10px; white-space: nowrap;margin: 1px 0 0 0;">
 									<?php $sql = "
 										SELECT *  
 										FROM platform__keywords 
@@ -441,7 +454,7 @@ if ($_GET["act"]=="reg" AND $qstId) {
 									while ($row1=mysqli_fetch_array($result1)) { 
 										$keyId=($row1["id"]);
 										$keyName=($row1["name"]);
-										?><div style="display: inline-block; position: relative; padding-left: 35px; margin-bottom: 10px;">
+										?><div>
 										<input type="checkbox" <?php foreach($keywords as $key){if ($key==$keyId) echo 'checked="checked"';}?> name="keywords[]" value="<?=$keyId?>" />
 										 <label style="font-size: 1.0em;font-weight: 300;"><?=$keyName?></label>
 										 </div>

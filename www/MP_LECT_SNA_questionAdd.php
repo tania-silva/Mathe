@@ -121,6 +121,7 @@ if ($_GET["act"]=="reg" AND $usrId) {
 		}
 	  });
 	</script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML' async></script>
 	<script type="text/javascript">
 		function doPreview(mode,source) {
@@ -183,6 +184,17 @@ if ($_GET["act"]=="reg" AND $usrId) {
 
 		  return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
 		}
+
+		$(document).ready(function () {
+			$('.proceed').click(function() {
+			checked = $("input[type=checkbox]:checked").length;
+
+			if(!checked) {
+				alert("You must select at least one keyword.");
+				return false;
+			}
+			});
+		});
 
 	</script>
 
@@ -294,10 +306,10 @@ if ($_GET["act"]=="reg" AND $usrId) {
 						</div>
 
 						<!--KeyWords div-->
-						 <div class="signup_field_ext">
+						 <div style="margin: 15px 0 0 18px;">
 							<label style="font-weight: 400;color: #c00;">* Keywords</label>
 							<div style="width: 625px;height: 400px;padding: 10px 0 10px 10px;border: dotted 1px #00aeef;border-radius: 5px;overflow: auto;">
-								<div id="keywords" style=" display: inline-block; padding-right: 10px; white-space: nowrap;margin: 1px 0 0 0;">
+								<div id="keywords" style="display: inline-block; padding-right: 10px; white-space: nowrap;margin: 1px 0 0 0;">
 									<!-- Keyword Area -->
 								</div>
 								<div class="clear"></div>

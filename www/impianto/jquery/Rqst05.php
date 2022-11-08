@@ -109,7 +109,7 @@ if ($rqst==1) {
 			while ($row1=mysqli_fetch_array($result1)) { 
 				$keyId=($row1["id"]);
 				$keyName=($row1["name"]);
-				?><div style="float: left;width: 200px;margin: 2px 5px 0 0;"><input type="checkbox" name="key<?=$keyId?>" value="<?=$keyId?>" /> <label style="font-size: 1.0em;font-weight: 300;"><?=$keyName?></label></div><?php
+				?><div style="float: left;width: 300px;margin: 2px 5px 0 0;"><input type="checkbox" name="key<?=$keyId?>" value="<?=$keyId?>" /> <label style="font-size: 1.0em;font-weight: 300;"><?=$keyName?></label></div><?php
 			}
 			?>
 			<div class="clear"></div>
@@ -131,7 +131,7 @@ if ($rqst==1) {
 			while ($row1=mysqli_fetch_array($result1)) { 
 				$keyId=($row1["id"]);
 				$keyName=($row1["name"]);
-				?><div style="float: left;width: 300px;margin: 2px 5px 0 0;"><input type="checkbox" name="keywords[]" value="<?=$keyId?>" /> <label style="font-size: 1.0em;font-weight: 300;"><?=$keyName?></label></div><?php
+				?><div style="float: left;width: 300px;margin: 2px 5px 0 0;"><input type="checkbox" name="keywords[]" value="<?=$keyId?>"/> <label style="font-size: 1.0em;font-weight: 300;"><?=$keyName?></label></div><?php
 			}
 			?>
 			<div class="clear"></div>
