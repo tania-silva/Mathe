@@ -32,6 +32,7 @@ $vidId=$_GET["idVideo"];
 
 $fromPage="";
 $fromPage=$_GET["from"];
+$keywords = []; 
 
 $validateValue=0;
 if (isset($_POST['examine'])) $validateValue=4;
@@ -55,7 +56,11 @@ if ($_GET["act"]=="reg" AND $usrId) {
 
 	while ($row=mysqli_fetch_array($result)) { 
 		$id_key=$row["id"];
-		if ($_POST["key".$id_key]==$id_key) $videoKeywords.=$id_key."_";
+		if ($_POST["key".$id_key]==$id_key){
+			$videoKeywords.=$id_key."_";
+			//IPB: ADD Array
+			array_push($keywords, $id_key);
+		} 
 	}
 
 	$checkStatus=0;
@@ -75,7 +80,20 @@ if ($_GET["act"]=="reg" AND $usrId) {
 				keywords='$videoKeywords'
 			WHERE id=$vidId";
 		$result=mysqli_query($conn,$sql);
-		
+
+		//IPB: Add keywords to platform_keyword_videoreviews
+		$sqlDelete = " 
+		DELETE FROM `platform_keyword_videoreviews` WHERE `id_video_review` = '$vidId'";
+		$resultDelete=mysqli_query($conn,$sqlDelete);
+
+		$sqlInsert= "
+		INSERT INTO `platform_keyword_videoreviews`(`id_keyword`, `id_video_review`) VALUES";
+		foreach($keywords as $key){
+			$sqlInsert .= "('$key','$vidId'),";
+		}
+		$sqlInsert= rtrim($sqlInsert, ",");
+		$resulInsert=mysqli_query($conn,$sqlInsert);
+
 		if ($fromPage=="edit") $redirectUrl="./MP_LECT_SNA_videoRevEdit.php?id_act=".$vidId; // passa alla pagina di edit
 		elseif ($fromPage=="valedit" OR $fromPage=="toggle") $redirectUrl="./MP_LECT_SNA_videoRevValidateEdit.php?from=".$fromPage."&id_act=".$vidId; // passa alla pagina di edit
 		else $redirectUrl="./MP_LECT_SNA_videoRevAdd3.php?idVideo=".$vidId; // passa alla scelta delle questions 
@@ -120,9 +138,8 @@ if ($_GET["act"]=="reg" AND $usrId) {
 						</div>
 					<?php }?>
 
-					<form method="post" action="./MP_LECT_SNA_videoRevAdd2.php?act=reg&idVideo=<?=$vidId?>&from=<?=$fromPage?>" enctype="multipart/form-data" style="display: block;margin-top: 5px;padding: 20px 0 20px 50px;border: solid 1px #00aeef;border-radius: 10px;">
-
-						<p>Please select keywords for this video reviews</p>
+					<form method="post" action="./MP_LECT_SNA_videoRevAdd2.php?act=reg&idVideo=<?=$vidId?>&from=<?=$fromPage?>" enctype="multipart/form-data" style="display: block;margin-top: 5px;padding: 20px 0 20px 50px;border: solid 1px #00aeef;border-radius: 10px;"> 
+					<p>Please select keywords for this video reviews</p>
 
 						<div style="padding-top: 25px;">
 							<label style="display: block;padding: 0 0 5px 0;font-weight: 400;color: #c00;">* Keywords</label>
