@@ -211,7 +211,7 @@ while ($row=mysqli_fetch_array($result)) {
 										}
 
 										?>
-						
+										<?php var_dump($qstId)?>
 										<p style="padding: 30px 0 5px 18px;font-size: 1.8em;font-weight: 400;color: #999;text-align: center;border-bottom: solid 1px #444;">Question <?=$k?></p>
 										<div class="signup_field_ext">
 											<div class="data" style="margin: 0 30px 0 0;padding: 10px;color: #009;background-color: #edf3fe;border-radius: 5px;">
@@ -277,18 +277,32 @@ while ($row=mysqli_fetch_array($result)) {
 										?>
 
 
-
+										<!-- Video Lesson & Review-->
 										<?php
 										if ($ansReg!=1) {
-											$sql = "
-												SELECT id, title, author, description, link, date, validate, languages, questions, 'vdLessons' as path 
-												FROM platform__SNA__VID_lessons
-												WHERE (INSTR(questions, '_{$qstId}_')>0 AND validate=1) 
-												UNION
-												SELECT id, title, author, description, link, date, validate, languages, questions, 'vdReviews' as path  
-												FROM platform__SNA__VID_reviews
-												WHERE (INSTR(questions, '_{$qstId}_')>0 AND validate=1) 
-												ORDER BY date DESC";
+											// $sql = "
+											// 	SELECT id, title, author, description, link, date, validate, languages, questions, 'vdLessons' as path 
+											// 	FROM platform__SNA__VID_lessons
+											// 	WHERE (INSTR(questions, '_{$qstId}_')>0 AND validate=1) 
+											// 	UNION
+											// 	SELECT id, title, author, description, link, date, validate, languages, questions, 'vdReviews' as path  
+											// 	FROM platform__SNA__VID_reviews
+											// 	WHERE (INSTR(questions, '_{$qstId}_')>0 AND validate=1) 
+											// 	ORDER BY date DESC";
+
+											//IPB: Get VideoLessons & Reviews for the wrong answers based on keywords
+											$sql= "
+											SELECT  vdLessons.*, 'vdLessons' as path 
+											FROM platform__SNA__VID_lessons AS vdLessons, `platform_keyword_snaquestion` AS KeyQuestions, `platform_keyword_videolessons` AS KeyVdLessons
+											WHERE KeyQuestions.`id_sna_question` = $qstId AND KeyVdLessons.`id_keyword`= KeyQuestions.`id_keyword` AND vdLessons.`id` = KeyVdLessons.`id_video_lesson` AND
+											vdLessons.`validate` = 1
+											UNION
+											SELECT vdReview.*, 'vdReviews' as path
+											FROM platform__SNA__VID_reviews AS vdReview, `platform_keyword_snaquestion` AS KeyQuestions, `platform_keyword_videoreviews` AS KeyVdReviews
+											WHERE KeyQuestions.`id_sna_question` = $qstId AND KeyVdReviews.`id_keyword`= KeyQuestions.`id_keyword` AND vdReview.`id` = KeyVdReviews.`id_video_review` AND
+											vdReview.`validate` = 1
+											ORDER BY date DESC";
+
 											$result=mysqli_query($conn, $sql);
 											$nSugg=mysqli_num_rows($result);
 
@@ -364,11 +378,20 @@ while ($row=mysqli_fetch_array($result)) {
 
 
 											/* TEACHING MATERIAL */
-											$sql = "
-												SELECT * 
-												FROM platform__SNA__tchmaterials
-												WHERE (INSTR(questions, '_{$qstId}_')>0 AND validate=1) 
-												ORDER BY date DESC";
+											
+											// $sql = "
+											// 	SELECT * 
+											// 	FROM platform__SNA__tchmaterials
+											// 	WHERE (INSTR(questions, '_{$qstId}_')>0 AND validate=1) 
+											// 	ORDER BY date DESC";
+
+											//IPB: Get TeacherMaterials for the wrong answers based on keywords
+											$sql="
+											SELECT snaTch.* FROM `platform__sna__tchmaterials` AS snaTch, `platform_keyword_snaquestion` AS KeyQuestion, `platform_keyword_snatchmaterials` AS KeyTch
+											WHERE KeyQuestion.`id_sna_question` = $qstId AND
+											KeyQuestion.`id_keyword`= KeyTch.`id_keyword` AND
+											KeyTch.`id_sna_tchmaterials` = snaTch.`id` AND snaTch.`validate` = 1";
+
 											$result=mysqli_query($conn, $sql);
 											$nSugg=mysqli_num_rows($result);
 
