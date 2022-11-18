@@ -308,7 +308,7 @@ if ($_GET["act"]=="reg" AND $vidId) {
 
 						<p style="padding: 0 0 0 25px;">If you want to edit the Topic(s)/Subtopic(s) for this Teaching Material <a href="./MP_LECT_SNA_TchMatAdd1.php?idVideo=<?=$vidId?>&from=<?=$fromPage?>">click here</a>.</p>
 						<p style="padding: 0 0 0 25px;">If you want to edit the Keyword(s) for this Teaching Material <a href="./MP_LECT_SNA_TchMatAdd2.php?idVideo=<?=$vidId?>&from=<?=$fromPage?>">click here</a>.</p>
-						<p style="padding: 0 0 0 25px;">If you want to edit the Question(s) for this Teaching Material <a href="./MP_LECT_SNA_TchMatAdd3.php?idVideo=<?=$vidId?>&from=<?=$fromPage?>">click here</a>.</p>
+						<!-- <p style="padding: 0 0 0 25px;">If you want to edit the Question(s) for this Teaching Material <a href="./MP_LECT_SNA_TchMatAdd3.php?idVideo=<?=$vidId?>&from=<?=$fromPage?>">click here</a>.</p> -->
 
 						<div class="signup_field_ext">
 							<label style="font-weight: 400;color: #c00;">* Title of the teaching material</label>
