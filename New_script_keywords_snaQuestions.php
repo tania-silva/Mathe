@@ -6,20 +6,16 @@ $sql="
 SELECT `id` FROM `platform__sna__questions`";
 $sqlResult=mysqli_query($conn,$sql);
 
-$idQuestion = [788];
+$idQuestion = [];
 $stringArray = [];
 $keysArray=[];
 
 
-// while ($row1=mysqli_fetch_array($sqlResult)) { 
-//     array_push($idQuestion, $row1["id"]);
-// }
+while ($row1=mysqli_fetch_array($sqlResult)) { 
+    array_push($idQuestion, $row1["id"]);
+}
 
 foreach($idQuestion as $id){
-    $tchArray = [];
-    $vLessonArray = [];
-    $vreviewArray = [];
-
     $sql="
     SELECT `keywords` FROM `platform__sna__tchmaterials` WHERE (INSTR(questions, '_{$id}_')>0)";
     $tchResults=mysqli_query($conn,$sql);
@@ -53,20 +49,20 @@ foreach($idQuestion as $id){
         }
     }
 
-    foreach($keysArray as $key){
-        if(array_count_values($keysArray)[$key] > 1 ){
-            var_dump($key);
+    $keyIntersection = array_count_values($keysArray);
+    foreach($keyIntersection as $key=>$value){
+        if($value > 1){
+            var_dump($id."->".$key);
+            echo "<br></br>";
             // $sql="
             // INSERT INTO `platform_keyword_snaquestion`(`id_keyword`, `id_sna_question`) VALUES ($id, $key)
             // ";
             // $snaQuestion=mysqli_query($conn,$sql);
         
             // var_dump($conn->error);
-            echo"<br><br>";
+            // echo"<br><br>";
         }
-    }
+    }   
 }
-var_dump($keysArray);
-echo "<br></br>";
 
 ?>
