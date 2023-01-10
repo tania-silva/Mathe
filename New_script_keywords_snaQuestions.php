@@ -1,14 +1,16 @@
 <?php include('www/impianto/inc/function.php'); ?>
 
 <?php 
+//Delete the data on the tables
+$sql = "
+DELETE FROM `platform_keyword_snaquestion`";
+$deleteSNAquestion=mysqli_query($conn,$sql);
 
 $sql="
 SELECT `id` FROM `platform__sna__questions`";
 $sqlResult=mysqli_query($conn,$sql);
 
 $idQuestion = [];
-$stringArray = [];
-$keysArray=[];
 
 
 while ($row1=mysqli_fetch_array($sqlResult)) { 
@@ -16,6 +18,9 @@ while ($row1=mysqli_fetch_array($sqlResult)) {
 }
 
 foreach($idQuestion as $id){
+    $stringArray = [];
+    $keysArray=[];
+
     $sql="
     SELECT `keywords` FROM `platform__sna__tchmaterials` WHERE (INSTR(questions, '_{$id}_')>0)";
     $tchResults=mysqli_query($conn,$sql);
@@ -48,21 +53,30 @@ foreach($idQuestion as $id){
             array_push($keysArray, $key);
         }
     }
-
-    $keyIntersection = array_count_values($keysArray);
-    foreach($keyIntersection as $key=>$value){
-        if($value > 1){
-            var_dump($id."->".$key);
-            echo "<br></br>";
-            // $sql="
-            // INSERT INTO `platform_keyword_snaquestion`(`id_keyword`, `id_sna_question`) VALUES ($id, $key)
-            // ";
-            // $snaQuestion=mysqli_query($conn,$sql);
-        
-            // var_dump($conn->error);
-            // echo"<br><br>";
+    if(count($stringArray) > 2){
+        $keyIntersection = array_count_values($keysArray);
+        foreach($keyIntersection as $key=>$value){
+            if($value > 1){
+                //var_dump($id."->".$key);
+                //echo "<br></br>";
+                $sql="
+                INSERT INTO `platform_keyword_snaquestion`(`id_keyword`, `id_sna_question`) VALUES ($key, $id)";
+                $snaQuestion=mysqli_query($conn,$sql);
+            
+                //var_dump($conn->error);
+                //echo"<br><br>";
+            }
+        }  
+    }else{  
+        foreach($keysArray as $k){
+            $sql="
+                INSERT INTO `platform_keyword_snaquestion`(`id_keyword`, `id_sna_question`) VALUES ($k, $id)";
+            $snaQuestionOne=mysqli_query($conn,$sql);
+            var_dump($conn->error);
+            echo"<br><br>";
         }
-    }   
+    }
+  
 }
 
 ?>
