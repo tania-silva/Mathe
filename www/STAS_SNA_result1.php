@@ -211,7 +211,6 @@ while ($row=mysqli_fetch_array($result)) {
 										}
 
 										?>
-										<?php var_dump($qstId)?>
 										<p style="padding: 30px 0 5px 18px;font-size: 1.8em;font-weight: 400;color: #999;text-align: center;border-bottom: solid 1px #444;">Question <?=$k?></p>
 										<div class="signup_field_ext">
 											<div class="data" style="margin: 0 30px 0 0;padding: 10px;color: #009;background-color: #edf3fe;border-radius: 5px;">
