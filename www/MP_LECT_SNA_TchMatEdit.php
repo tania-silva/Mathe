@@ -218,8 +218,8 @@ if ($_GET["act"]=="reg" AND $vidId) {
 	$validateReq=0;
 	if (
 		(strlen($videoTopic)>4 OR strlen($videoSubTopic)>4) AND 
-		strlen($videoKeywords)>4 AND 
-		strlen($videoQuestions)>4
+		strlen($videoKeywords)>4
+		// strlen($videoQuestions)>4
 	) $validateReq=1;
 
 	// File allegato alla question
@@ -339,7 +339,7 @@ MathJax.Hub.Config({
 
 						<p style="padding: 0 0 0 25px;">If you want to edit the Topic(s)/Subtopic(s) for this Teaching Material <a href="./MP_LECT_SNA_TchMatAdd1.php?idVideo=<?=$vidId?>&from=edit">click here</a>.</p>
 						<p style="padding: 0 0 0 25px;">If you want to edit the Keyword(s) for this Teaching Material <a href="./MP_LECT_SNA_TchMatAdd2.php?idVideo=<?=$vidId?>&from=edit">click here</a>.</p>
-						<p style="padding: 0 0 0 25px;">If you want to edit the Question(s) for this Teaching Material <a href="./MP_LECT_SNA_TchMatAdd3.php?idVideo=<?=$vidId?>&from=edit">click here</a>.</p>
+						<!-- <p style="padding: 0 0 0 25px;">If you want to edit the Question(s) for this Teaching Material <a href="./MP_LECT_SNA_TchMatAdd3.php?idVideo=<?=$vidId?>&from=edit">click here</a>.</p> -->
 
 						<div class="signup_field_ext">
 							<label style="font-weight: 400;color: #c00;">* Title of the teaching material</label>
@@ -437,7 +437,7 @@ MathJax.Hub.Config({
 							<?php if ($validateReq==1) {?>
 								<input type="submit" name="examine" value="SEND FOR VALIDATION" class="proceed" style="width: 250px;margin-left: 5px;font-size: 1.3em;padding: 5px 20px;" />
 							<?php } else {?>
-								<div style="float: right;width: 250px;margin: 30px 30px 0 0;padding: 5px;text-align: center;border: solid 1px #f00;border-radius: 5px;">To "SEND FOR VALIDATION this video you have to choose topic/subtopic, keywords and questions.</div>
+								<div style="float: right;width: 250px;margin: 30px 30px 0 0;padding: 5px;text-align: center;border: solid 1px #f00;border-radius: 5px;">To "SEND FOR VALIDATION this video you have to choose topic/subtopic and keywords.</div>
 							<?php }?>
 						</div>
 

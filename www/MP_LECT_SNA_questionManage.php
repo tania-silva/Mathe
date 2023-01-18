@@ -60,7 +60,7 @@ $queryStr="page={$page}&srcLevel={$srcLevel}&srcTopic={$srcTopic}&srcSubTopic={$
 
 					$sqlP = "
 						SELECT *, p.id AS qstId, q.name AS topicName, k.name AS subTopicName  
-						FROM platform__SNA__questions AS p 
+						FROM platform__sna__questions AS p 
 						LEFT JOIN platform__topic AS q 
 						ON p.topic=q.id 
 						LEFT JOIN platform__subtopic AS k 
@@ -68,8 +68,9 @@ $queryStr="page={$page}&srcLevel={$srcLevel}&srcTopic={$srcTopic}&srcSubTopic={$
 						$where 
 						ORDER BY date DESC";
 					$resultP=mysqli_query($conn,$sqlP);
+					
 					if ($resultP) $totale=mysqli_num_rows($resultP); else $totale=0;
-
+					
 					$q_pag=10; //quanti per pagina
 					$pagine1=bcdiv($totale,$q_pag,3);
 					$pagine = ceil($pagine1); //arrotonda all'intero maggiore
@@ -77,6 +78,7 @@ $queryStr="page={$page}&srcLevel={$srcLevel}&srcTopic={$srcTopic}&srcSubTopic={$
 
 					$sqlP = $sqlP." LIMIT ".$page_from.",".$q_pag.";";
 					$resultP=mysqli_query($conn,$sqlP);
+			
 					?>
 					<div style="margin: 25px 0 5px 5px;">
 						<p style="float: right;width: 300px;padding: 0 10px 0 0;text-align: right;">Found <?=$totale?> questions</p>
@@ -105,7 +107,7 @@ $queryStr="page={$page}&srcLevel={$srcLevel}&srcTopic={$srcTopic}&srcSubTopic={$
 									WHERE hidden=0 
 									ORDER BY name ASC";
 								$result=mysqli_query($conn,$sql);
-								
+							
 								while ($row=mysqli_fetch_array($result)) { 
 									$topId=$row["id"];
 									$topName=$row["name"];
@@ -119,6 +121,7 @@ $queryStr="page={$page}&srcLevel={$srcLevel}&srcTopic={$srcTopic}&srcSubTopic={$
 									ORDER BY name ASC";
 								$result=mysqli_query($conn,$sql);
 								$nSubTopic=mysqli_num_rows($result);
+							
 								?>
 							</select>
 							<?php if ($srcSubTopic OR $nSubTopic) $dsplSubTopic="block"; else $dsplSubTopic="none"; ?>
@@ -134,7 +137,7 @@ $queryStr="page={$page}&srcLevel={$srcLevel}&srcTopic={$srcTopic}&srcSubTopic={$
 										WHERE (id_top=$srcTopic AND hidden=0) 
 										ORDER BY name ASC";
 									$result=mysqli_query($conn,$sql);
-									
+								
 									while ($row=mysqli_fetch_array($result)) { 
 										$subtopicId=($row["id"]);
 										$subtopicName=($row["name"]);

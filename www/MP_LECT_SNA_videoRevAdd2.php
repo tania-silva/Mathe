@@ -77,7 +77,8 @@ if ($_GET["act"]=="reg" AND $usrId) {
 		$sql = "
 			UPDATE `platform__SNA__VID_reviews` 
 			SET 
-				keywords='$videoKeywords'
+				keywords='$videoKeywords',
+				validate='$validateValue'
 			WHERE id=$vidId";
 		$result=mysqli_query($conn,$sql);
 
@@ -96,9 +97,13 @@ if ($_GET["act"]=="reg" AND $usrId) {
 
 		if ($fromPage=="edit") $redirectUrl="./MP_LECT_SNA_videoRevEdit.php?id_act=".$vidId; // passa alla pagina di edit
 		elseif ($fromPage=="valedit" OR $fromPage=="toggle") $redirectUrl="./MP_LECT_SNA_videoRevValidateEdit.php?from=".$fromPage."&id_act=".$vidId; // passa alla pagina di edit
-		else $redirectUrl="./MP_LECT_SNA_videoRevAdd3.php?idVideo=".$vidId; // passa alla scelta delle questions 
+		else $redirectUrl="./MP_LECT_SNA_videoRevManage.php"; // torna alla lista delle video reviews
 
-	} else $redirectUrl="./MP_LECT_SNA_videoRevAdd2.php?idVideo=".$vidId."&msg=KO&from=".$fromPage;
+	} else $redirectUrl="./MP_LECT_SNA_videoRevAdd3.php?idVideo=".$vidId."&msg=KO&from=".$fromPage;
+
+	echo "<SCRIPT LANGUAGE=JAVASCRIPT>";
+	echo "document.location.href='".$redirectUrl."';";
+	echo "</SCRIPT>";
 
 	echo "<SCRIPT LANGUAGE=JAVASCRIPT>";
 	echo "document.location.href='".$redirectUrl."';";

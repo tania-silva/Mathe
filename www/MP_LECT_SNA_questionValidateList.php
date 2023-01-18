@@ -30,7 +30,7 @@ if (!$srcSubTopic) $srcSubTopic=$_GET["srcSubTopic"];
 //$srcValidation=$_POST["srcValidation"];
 //if (!$srcValidation) $srcValidation=$_GET["srcValidation"];
 
-/* Impongo di visualizzare soltanto quelle da valutare */
+/* Show only the ones that need validation*/
 $srcValidation=4;
 
 $queryStr="page={$page}&srcLevel={$srcLevel}&srcTopic={$srcTopic}&srcSubTopic={$srcSubTopic}&srcValidation={$srcValidation}";

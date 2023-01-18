@@ -76,7 +76,8 @@ if ($_GET["act"]=="reg" AND $usrId) {
 		$sql = "
 			UPDATE `platform__SNA__tchmaterials` 
 			SET 
-				keywords='$videoKeywords'
+				keywords='$videoKeywords',
+				validate='$validateValue'
 			WHERE id=$vidId";
 		$result=mysqli_query($conn,$sql);
 
@@ -95,13 +96,14 @@ if ($_GET["act"]=="reg" AND $usrId) {
 		
 		if ($fromPage=="edit") $redirectUrl="./MP_LECT_SNA_TchMatEdit.php?id_act=".$vidId; // passa alla pagina di edit
 		elseif ($fromPage=="valedit" OR $fromPage=="toggle") $redirectUrl="./MP_LECT_SNA_TchMatValidateEdit.php?from=".$fromPage."&id_act=".$vidId; // passa alla pagina di edit
-		else $redirectUrl="./MP_LECT_SNA_TchMatAdd3.php?idVideo=".$vidId; // passa alla scelta delle questions 
+		else $redirectUrl="./MP_LECT_SNA_TchMatManage.php"; // torna alla lista delle video reviews
 
-	} else $redirectUrl="./MP_LECT_SNA_TchMatAdd2.php?idVideo=".$vidId."&msg=KO&from=".$fromPage;
+	} else $redirectUrl="./MP_LECT_SNA_TchMatAdd3.php?idVideo=".$vidId."&msg=KO&from=".$fromPage;
 
 	echo "<SCRIPT LANGUAGE=JAVASCRIPT>";
 	echo "document.location.href='".$redirectUrl."';";
 	echo "</SCRIPT>";
+		
 } else {
 
 	$sql = "
@@ -138,7 +140,6 @@ if ($_GET["act"]=="reg" AND $usrId) {
 					<?php }?>
 
 					<form method="post" action="./MP_LECT_SNA_TchMatAdd2.php?act=reg&idVideo=<?=$vidId?>&from=<?=$fromPage?>" enctype="multipart/form-data" style="display: block;margin-top: 5px;padding: 20px 0 20px 50px;border: solid 1px #00aeef;border-radius: 10px;">
-						<?php var_dump($keywords);?>
 						<p>Please select keywords for this video reviews</p>
 
 						<div style="padding-top: 25px;">

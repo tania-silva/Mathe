@@ -286,7 +286,7 @@ if ($_GET["act"]=="reg" AND $vidId) {
 
 						<p style="padding: 0 0 0 25px;">If you want to edit the Topic(s)/Subtopic(s) for this Video Lesson <a href="./MP_LECT_SNA_videoLesAdd1.php?idVideo=<?=$vidId?>&from=<?=$fromPage?>">click here</a>.</p>
 						<p style="padding: 0 0 0 25px;">If you want to edit the Keyword(s) for this Video Lesson <a href="./MP_LECT_SNA_videoLesAdd2.php?idVideo=<?=$vidId?>&from=<?=$fromPage?>">click here</a>.</p>
-						<p style="padding: 0 0 0 25px;">If you want to edit the Question(s) for this Video Lesson <a href="./MP_LECT_SNA_videoLesAdd3.php?idVideo=<?=$vidId?>&from=<?=$fromPage?>">click here</a>.</p>
+						<!-- <p style="padding: 0 0 0 25px;">If you want to edit the Question(s) for this Video Lesson <a href="./MP_LECT_SNA_videoLesAdd3.php?idVideo=<?=$vidId?>&from=<?=$fromPage?>">click here</a>.</p> -->
 
 						<div class="signup_field_ext">
 							<label style="font-weight: 400;color: #c00;">* Title of the Lesson</label>
